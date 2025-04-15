@@ -1,5 +1,4 @@
-﻿using Gobb.Managers;
-using Gobb.Providers;
+﻿using Gobb.Providers;
 using ModelContextProtocol.Server;
 using System.ComponentModel;
 
@@ -12,7 +11,7 @@ namespace Gobb.Tools
         public record Input(string TicketId);
         public record Output(string Summary, string Description);
 
-        public TicketTool(ITicketProvider ticketProvider, IRepositoryManager repositoryManager)
+        public TicketTool(ITicketProvider ticketProvider)
         {
             _ticketProvider = ticketProvider ?? throw new ArgumentNullException(nameof(ticketProvider));
         }

@@ -1,5 +1,4 @@
-﻿using Gobb.Managers;
-using Gobb.Options;
+﻿using Gobb.Options;
 using Gobb.Providers;
 using Gobb.Tools;
 using Microsoft.Extensions.Configuration;
@@ -18,19 +17,14 @@ builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-builder.Services.Configure<JiraContextProviderOptions>(
+builder.Services.Configure<JiraTicketProviderOptions>(
     builder.Configuration.GetSection("JiraContextProviderSettings"));
 
-builder.Services.Configure<GitRepositoryManagerOptions>(
-    builder.Configuration.GetSection("GitRepositoryManagerOptions"));
-
 builder.Services.AddTransient<ITicketProvider, JiraTicketProvider>();
-builder.Services.AddTransient<IRepositoryManager, GitRepositoryManager>();
 
 builder.Services
     .AddMcpServer()
     .WithStdioServerTransport()
-    .WithTools<TicketTool>()
-    .WithTools<GitTool>();
+    .WithTools<TicketTool>();
 
 await builder.Build().RunAsync();
