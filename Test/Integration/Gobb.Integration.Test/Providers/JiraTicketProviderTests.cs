@@ -1,34 +1,46 @@
 using Gobb.Options;
-using System.Text.Json;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Moq;
+using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace Gobb.Integration.Test.Providers
 {
     [TestFixture]
     public class JiraTicketProviderTests
     {
-        private JiraTicketProviderOptions options;
+        private IOptions<JiraClientOptions> options;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            var json = File.ReadAllText("appsettings.json");
-            using var doc = JsonDocument.Parse(json);
-            var root = doc.RootElement;
-            var optionsSection = root.GetProperty("JiraContextProviderSettings");
-            options = optionsSection.Deserialize<JiraTicketProviderOptions>() ?? throw new InvalidDataException("appsettings could not be deserialized");
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            var settingsSection = config.GetSection("JiraClientOptions");
+            options = MsOptions.Create(settingsSection.Get<JiraClientOptions>() ?? throw new InvalidDataException("Jira Client Options not found in appsettings"));
         }
 
         [Test]
         public async Task GetTicketSummaryAndDescriptionAsync_WithValidTicketKey_ReturnsExpected()
         {
             var testTicket = "GOBB-1";
-            var jiraTicketProvider = new JiraTicketProvider(options.Url, options.Username, options.ApiToken);
+            var jiraClientLogger = new Mock<ILogger<JiraClient>>();
+            var jiraClient = new JiraClient(jiraClientLogger.Object, options);
+
+            var jiraTicketProviderLogger = new Mock<ILogger<JiraTicketProvider>>();
+            var jiraTicketProvider = new JiraTicketProvider(jiraTicketProviderLogger.Object, jiraClient);
             
             var result = await jiraTicketProvider.GetTicketSummaryAndDescriptionAsync(testTicket);
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Summary, Is.Not.Null);
-            Assert.That(result.Description, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Summary, Is.Not.Null);
+                Assert.That(result.Description, Is.Not.Null);
+            });
         }
     }
 }

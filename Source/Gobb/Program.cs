@@ -7,19 +7,19 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 var builder = Host.CreateApplicationBuilder(args);
-builder.Logging.AddConsole(consoleLogOptions =>
-{
-    // Configure all logs to go to stderr
-    consoleLogOptions.LogToStandardErrorThreshold = LogLevel.Trace;
-});
+builder.Logging.ClearProviders();
+builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
+builder.Logging.AddConsole();
+builder.Services.AddLogging();
 
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-builder.Services.Configure<JiraTicketProviderOptions>(
-    builder.Configuration.GetSection("JiraContextProviderSettings"));
+builder.Services.Configure<JiraClientOptions>(
+    builder.Configuration.GetSection("JiraClientOptions"));
 
+builder.Services.AddTransient<JiraClient>();
 builder.Services.AddTransient<ITicketProvider, JiraTicketProvider>();
 
 builder.Services
