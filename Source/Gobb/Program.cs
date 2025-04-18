@@ -17,7 +17,6 @@ builder.Services.AddLogging(b =>
         .AddDebug()
         .AddConsole()
         .AddConfiguration(builder.Configuration.GetSection("Logging"))
-        .SetMinimumLevel(LogLevel.Information)
 );
 
 builder.Services.Configure<JiraClientOptions>(
