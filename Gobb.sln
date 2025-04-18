@@ -15,6 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gobb.Integration.Test", "Test\Integration\Gobb.Integration.Test\Gobb.Integration.Test.csproj", "{990F4A71-D4A0-4FEF-912B-6D368ACD99FA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{FB2A7180-DE62-4C58-BABE-15E5FF030BB6}"
+	ProjectSection(SolutionItems) = preProject
+		Documents\DebugNotes.md = Documents\DebugNotes.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
