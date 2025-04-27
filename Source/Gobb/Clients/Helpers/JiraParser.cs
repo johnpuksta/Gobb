@@ -1,57 +1,8 @@
-﻿using System.Text;
-using System.Text.Json.Serialization;
+﻿using Gobb.Clients.Contracts;
+using System.Text;
 
-
-namespace Gobb.Clients
+namespace Gobb.Clients.Helpers
 {
-    public class JiraIssue
-    {
-        [JsonPropertyName("fields")]
-        public JiraIssueFields Fields { get; set; }
-    }
-
-    public class JiraIssueFields
-    {
-        [JsonPropertyName("summary")]
-        public string Summary { get; set; }
-
-        [JsonPropertyName("description")]
-        public DescriptionBlock Description { get; set; }
-    }
-
-    public class DescriptionBlock
-    {
-        [JsonPropertyName("type")]
-        public string Type { get; set; }
-
-        [JsonPropertyName("version")]
-        public int Version { get; set; }
-
-        [JsonPropertyName("content")]
-        public List<ContentBlock> Content { get; set; }
-    }
-
-    public class ContentBlock
-    {
-        [JsonPropertyName("type")]
-        public string Type { get; set; }
-
-        [JsonPropertyName("content")]
-        public List<ContentBlock> Content { get; set; }
-
-        [JsonPropertyName("text")]
-        public string Text { get; set; }
-
-        [JsonPropertyName("marks")]
-        public List<Mark> Marks { get; set; }
-    }
-
-    public class Mark
-    {
-        [JsonPropertyName("type")]
-        public string Type { get; set; }
-    }
-
     public static class JiraParser
     {
         public static (string summary, string descriptionText) ParseJiraIssue(JiraIssueFields jiraIssueFields)
@@ -79,7 +30,6 @@ namespace Gobb.Clients
                     {
                         string text = child.Text ?? "";
 
-                        // Wrap in backticks if it's marked as code
                         if (child.Marks != null && child.Marks.Exists(m => m.Type == "code"))
                             text = $"`{text}`";
 
@@ -90,7 +40,7 @@ namespace Gobb.Clients
                         sb.AppendLine();
                     }
                 }
-                sb.AppendLine(); // End of paragraph
+                sb.AppendLine();
             }
             else if (block.Type == "bulletList")
             {
@@ -104,10 +54,6 @@ namespace Gobb.Clients
                         ParseContentBlock(itemContent, sb, indentLevel + 1);
                     }
                 }
-            }
-            else
-            {
-                // Handle other block types (e.g., heading, orderedList) as needed
             }
         }
     }
