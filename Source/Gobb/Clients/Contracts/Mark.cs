@@ -2,7 +2,7 @@
 
 namespace Gobb.Clients.Contracts
 {
-    public class Mark
+    public sealed class Mark
     {
         [JsonPropertyName("type")]
         public string Type { get; set; }

@@ -2,8 +2,16 @@
 
 namespace Gobb.Providers
 {
+    /// <summary>
+    /// A service that provides ticket data.
+    /// </summary>
     public interface ITicketProvider
     {
-        public Task<ITicketData> GetTicketSummaryAndDescriptionAsync(string ticketKey);
+        /// <summary>
+        /// Retrieves a ticket's summary and description asynchronously.
+        /// </summary>
+        /// <param name="ticketId">The ticket's Id</param>
+        /// <returns>An <see cref="ITicketData"/> object holding the ticket's summary and description</returns>
+        public Task<ITicketData> GetTicketSummaryAndDescriptionAsync(string ticketId);
     }
 }

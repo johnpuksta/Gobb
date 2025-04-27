@@ -6,14 +6,24 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+/// <summary>
+/// A program that sets up and runs a host for the Gobb application.
+/// </summary>
 public sealed class Program
 {
+    /// <summary>
+    /// Main entry point for the application.
+    /// </summary>
     public static async Task Main(string[] args)
     {
         var host = CreateHostBuilder(args).Build();
         await host.RunAsync();
     }
 
+    /// <summary>
+    /// Creates a host builder for the application.
+    /// </summary>
+    /// <returns>An <see cref="IHostBuilder"/></returns>
     private static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((context, config) =>
@@ -28,9 +38,14 @@ public sealed class Program
             {
                 ConfigureLogging(context.Configuration, services);
                 ConfigureTicketProvider(context.Configuration, services);
-                ConfigureMcp(context.Configuration, services);
+                ConfigureMcp(services);
             });
 
+    /// <summary>
+    /// Configures logging for the application.
+    /// </summary>
+    /// <param name="configuration">The <see cref="IConfiguration"/> object holding appsettings</param>
+    /// <param name="services">The <see cref="IServiceCollection"/> used for dependency injection</param>
     private static void ConfigureLogging(IConfiguration configuration, IServiceCollection services)
     {
         services.AddLogging(b =>
@@ -39,6 +54,11 @@ public sealed class Program
              .AddConfiguration(configuration.GetSection("Logging")));
     }
 
+    /// <summary>
+    /// Configures the ticket provider for the application.
+    /// </summary>
+    /// <param name="configuration">The <see cref="IConfiguration"/> object holding appsettings</param>
+    /// <param name="services">The <see cref="IServiceCollection"/> used for dependency injection</param>
     private static void ConfigureTicketProvider(IConfiguration configuration, IServiceCollection services)
     {
         services.Configure<JiraClientOptions>(
@@ -48,7 +68,11 @@ public sealed class Program
         services.AddSingleton<ITicketProvider, JiraTicketProvider>();
     }
 
-    private static void ConfigureMcp(IConfiguration configuration, IServiceCollection services)
+    /// <summary>
+    /// Configures the exposed Mcp server tools for the application.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> used for dependency injection</param>
+    private static void ConfigureMcp(IServiceCollection services)
     {
         services.AddMcpServer()
                .WithStdioServerTransport()

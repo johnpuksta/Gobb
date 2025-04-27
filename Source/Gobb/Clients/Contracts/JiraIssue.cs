@@ -2,7 +2,7 @@
 
 namespace Gobb.Clients.Contracts
 {
-    public class JiraIssue
+    public sealed class JiraIssue
     {
         [JsonPropertyName("fields")]
         public JiraIssueFields Fields { get; set; }

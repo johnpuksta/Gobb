@@ -2,7 +2,7 @@
 
 namespace Gobb.Clients.Contracts
 {
-    public class DescriptionBlock
+    public sealed class DescriptionBlock
     {
         [JsonPropertyName("type")]
         public string Type { get; set; }
