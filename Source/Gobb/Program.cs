@@ -6,28 +6,52 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-var builder = Host.CreateApplicationBuilder(args);
+public sealed class Program
+{
+    public static async Task Main(string[] args)
+    {
+        var host = CreateHostBuilder(args).Build();
+        await host.RunAsync();
+    }
 
-builder.Configuration
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+    private static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration((context, config) =>
+            {
+                var env = context.HostingEnvironment;
 
-builder.Services.AddLogging(b =>
-    b
-        .AddDebug()
-        .AddConsole()
-        .AddConfiguration(builder.Configuration.GetSection("Logging"))
-);
+                config.SetBasePath(Directory.GetCurrentDirectory())
+                      .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                      .AddEnvironmentVariables();
+            })
+            .ConfigureServices((context, services) =>
+            {
+                ConfigureLogging(context.Configuration, services);
+                ConfigureTicketProvider(context.Configuration, services);
+                ConfigureMcp(context.Configuration, services);
+            });
 
-builder.Services.Configure<JiraClientOptions>(
-    builder.Configuration.GetSection("JiraClientOptions"));
+    private static void ConfigureLogging(IConfiguration configuration, IServiceCollection services)
+    {
+        services.AddLogging(b =>
+            b.AddDebug()
+             .AddConsole()
+             .AddConfiguration(configuration.GetSection("Logging")));
+    }
 
-builder.Services.AddSingleton<JiraClient>();
-builder.Services.AddSingleton<ITicketProvider, JiraTicketProvider>();
+    private static void ConfigureTicketProvider(IConfiguration configuration, IServiceCollection services)
+    {
+        services.Configure<JiraClientOptions>(
+            configuration.GetSection("JiraClientOptions"));
 
-builder.Services
-    .AddMcpServer()
-    .WithStdioServerTransport()
-    .WithTools<TicketTool>();
+        services.AddSingleton<JiraClient>();
+        services.AddSingleton<ITicketProvider, JiraTicketProvider>();
+    }
 
-await builder.Build().RunAsync();
+    private static void ConfigureMcp(IConfiguration configuration, IServiceCollection services)
+    {
+        services.AddMcpServer()
+               .WithStdioServerTransport()
+               .WithTools<TicketTool>();
+    }
+}

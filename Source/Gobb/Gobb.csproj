@@ -19,13 +19,6 @@
     <PackageReference Include="ModelContextProtocol" Version="0.1.0-preview.8" />
   </ItemGroup>
 
-  <PropertyGroup>
-      <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
-      <ContainerRepository>jpuksta1/gobb</ContainerRepository>
-      <ContainerFamily>alpine</ContainerFamily>
-      <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

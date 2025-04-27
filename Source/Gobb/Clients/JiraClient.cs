@@ -20,7 +20,7 @@ public class JiraClient
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authString);
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-        _logger.LogInformation("JiraClient initialized with base URL: {BaseUrl}", options.Value.Url);
+        _logger.LogDebug("JiraClient initialized with base URL: {BaseUrl}", options.Value.Url);
     }
 
     public async Task<JiraIssue> GetIssueAsync(string issueKey)
@@ -38,7 +38,7 @@ public class JiraClient
         {
             string errorMessage = await response.Content.ReadAsStringAsync();
             _logger.LogError("Failed to retrieve issue: {IssueKey}, Status Code: {StatusCode}, Error: {Error}", issueKey, response.StatusCode, errorMessage);
-            throw new Exception($"Failed to retrieve issue: {response.StatusCode} - {errorMessage}");
+            throw new HttpRequestException($"Failed to retrieve issue: {response.StatusCode} - {errorMessage}");
         }
     }
 }
