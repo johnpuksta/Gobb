@@ -88,18 +88,23 @@ The following software/tools need to be installed
                   "-i",
                   "--rm",
                   "-e", "JiraClientOptions__Url={INSERT_URL}",
-                  "-e", "JiraClientOptions__Email={INSERT_EMAIL},
-                  "-e", "JiraClientOptions__ApiToken={INSERT_APITOKEN}, 
+                  "-e", "JiraClientOptions__Email={INSERT_EMAIL}",
+                  "-e", "JiraClientOptions__ApiToken={INSERT_APITOKEN}",
+                  "-e", "TicketProvider__Type=Jira",
                   "jpuksta1/gobb"
               ]
           }        
       }
     }
    ```
-   This config allows VS Code to execute Gobb's latest image (stored in the [jpuksta1/gobb][GobbRegistry] registry). This config expects 3 environment variables:
+   This config allows VS Code to execute Gobb's latest image (stored in the [jpuksta1/gobb][GobbRegistry] registry). This config expects the following environment variables:
     1. The JIRA URL that hosts your Ticket data. Example: `https://domain.atlassian.net`
     2. The email that your JIRA account is registered with.
     3. The API Token you just created.
+    4. (Optional) If using GitHub as the ticket provider:
+       - `TicketProvider__Type`: Set to `GitHub`.
+       - `GitHubClient__RepositoryOwner`: The owner of the GitHub repository.
+       - `GitHubClient__RepositoryName`: The name of the GitHub repository.
 
 4. Once `mcp.json` is set up, there should be a "Start" option that appears in the config.
 
@@ -126,6 +131,48 @@ The following software/tools need to be installed
 6. Continue Vibe Coding and Interact with your Agent to tell it to keep/undo changes!
 
 7. __Optional:__ If you want to locally debug Gobb, then you will need to inject the URL, Email, and ApiToken in the `appsettings.json` file. Notes on how to debug can be found under [Debug Notes](Documents/DebugNotes.md).
+
+### Dynamic Ticket Provider Configuration
+Gobb now supports dynamic selection of ticket providers (Jira or GitHub). To configure this, update the `appsettings.json` file or set environment variables as needed.
+
+#### appsettings.json Example
+```json
+{
+  "TicketProvider": {
+    "Type": "Jira" // Change to "GitHub" to use GitHubClient
+  },
+  "GitHubClient": {
+    "RepositoryOwner": "your-repo-owner",
+    "RepositoryName": "your-repo-name"
+  }
+}
+```
+
+- **`Type`**: Specifies the ticket provider to use. Set to `Jira` for Jira integration or `GitHub` for GitHub integration.
+- **`GitHubClient`**: Only required if `Type` is set to `GitHub`. Configure the repository owner and name here.
+
+#### Environment Variables Example
+Alternatively, you can set the following environment variables:
+- `TicketProvider__Type`: Set to `Jira` or `GitHub`.
+- `GitHubClient__RepositoryOwner`: The owner of the GitHub repository (only required for GitHub).
+- `GitHubClient__RepositoryName`: The name of the GitHub repository (only required for GitHub).
+
+This flexibility allows you to switch between ticket providers without modifying the code.
+
+#### Other appsettings.json Configuration
+In addition to the dynamic ticket provider configuration, the `appsettings.json` file includes the following settings:
+
+- **`Logging`**: Configures the logging levels for the application.
+  - `Default`: The default logging level for the application.
+  - `System`: The logging level for system-related logs.
+  - `Microsoft`: The logging level for Microsoft-related logs.
+
+- **`JiraClientOptions`**: Contains the configuration for connecting to Jira.
+  - `Url`: The base URL of your Jira instance (e.g., `https://domain.atlassian.net`).
+  - `Email`: The email address associated with your Jira account.
+  - `ApiToken`: The API token for authenticating with Jira.
+
+These settings are essential for the application's functionality and should be configured according to your environment.
 
 <p Align="right">(<a href="#readme-top">back to top</a>)</p>
 
