@@ -61,11 +61,35 @@ public sealed class Program
     /// <param name="services">The <see cref="IServiceCollection"/> used for dependency injection</param>
     private static void ConfigureTicketProvider(IConfiguration configuration, IServiceCollection services)
     {
-        services.Configure<JiraClientOptions>(
-            configuration.GetSection("JiraClientOptions"));
+        var ticketProviderType = configuration["TicketProvider:Type"];
 
-        services.AddSingleton<JiraClient>();
-        services.AddSingleton<ITicketProvider, JiraTicketProvider>();
+        if (ticketProviderType == "Jira")
+        {
+            services.Configure<JiraClientOptions>(
+                configuration.GetSection("JiraClientOptions"));
+
+            services.AddSingleton<JiraClient>();
+            services.AddSingleton<ITicketProvider, JiraTicketProvider>();
+        }
+        else if (ticketProviderType == "GitHub")
+        {
+            services.AddHttpClient<GitHubClient>((provider, client) =>
+            {
+                client.DefaultRequestHeaders.Add("User-Agent", "GobbApp");
+            });
+
+            services.AddSingleton<ITicketProvider>(provider =>
+            {
+                var httpClient = provider.GetRequiredService<HttpClient>();
+                var repositoryOwner = configuration["GitHubClient:RepositoryOwner"];
+                var repositoryName = configuration["GitHubClient:RepositoryName"];
+                return new GitHubClient(httpClient, repositoryOwner, repositoryName);
+            });
+        }
+        else
+        {
+            throw new InvalidOperationException("Invalid TicketProvider type specified in configuration.");
+        }
     }
 
     /// <summary>
