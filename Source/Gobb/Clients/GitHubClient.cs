@@ -1,8 +1,7 @@
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
+using Gobb.Clients.Contracts.GitHub;
 using Gobb.Data;
 using Gobb.Providers;
+using System.Text.Json;
 
 namespace Gobb.Clients
 {
@@ -35,12 +34,6 @@ namespace Gobb.Clients
             }
 
             return new TicketData(issue.Title, issue.Body);
-        }
-
-        private class GitHubIssue
-        {
-            public string Title { get; set; } = string.Empty;
-            public string Body { get; set; } = string.Empty;
         }
     }
 }

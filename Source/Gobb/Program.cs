@@ -1,10 +1,13 @@
-﻿using Gobb.Options;
+﻿using Gobb.Clients;
+using Gobb.Options;
 using Gobb.Providers;
 using Gobb.Tools;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Net.Http.Headers;
+using System.Net.Http;
 
 /// <summary>
 /// A program that sets up and runs a host for the Gobb application.
@@ -75,7 +78,7 @@ public sealed class Program
         {
             services.AddHttpClient<GitHubClient>((provider, client) =>
             {
-                client.DefaultRequestHeaders.Add("User-Agent", "GobbApp");
+                client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("GobbApp", "1.0")); //TODO: Have this reference Gobb's version
             });
 
             services.AddSingleton<ITicketProvider>(provider =>

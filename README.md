@@ -143,13 +143,14 @@ Gobb now supports dynamic selection of ticket providers (Jira or GitHub). To con
   },
   "GitHubClient": {
     "RepositoryOwner": "your-repo-owner",
-    "RepositoryName": "your-repo-name"
+    "RepositoryName": "your-repo-name",
+    "Token": "your-github-token"
   }
 }
 ```
 
 - **`Type`**: Specifies the ticket provider to use. Set to `Jira` for Jira integration or `GitHub` for GitHub integration.
-- **`GitHubClient`**: Only required if `Type` is set to `GitHub`. Configure the repository owner and name here.
+- **`GitHubClient`**: Only required if `Type` is set to `GitHub`. Configure the repository owner, name, and token here.
 
 #### Environment Variables Example
 Alternatively, you can set the following environment variables:
