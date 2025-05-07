@@ -1,4 +1,4 @@
-﻿using Gobb.Clients.Contracts;
+﻿using Gobb.Clients.Contracts.Jira;
 using System.Text;
 
 namespace Gobb.Clients.Helpers

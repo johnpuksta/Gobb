@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Gobb.Clients.Contracts
+namespace Gobb.Clients.Contracts.Jira
 {
     public sealed class Mark
     {

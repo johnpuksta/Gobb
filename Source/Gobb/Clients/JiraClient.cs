@@ -4,7 +4,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Gobb.Options;
 using Microsoft.Extensions.Options;
-using Gobb.Clients.Contracts;
+using Gobb.Clients.Contracts.Jira;
 
 /// <summary>
 /// An http client for interacting with the Jira REST API.

@@ -1,10 +1,13 @@
-﻿using Gobb.Options;
+﻿using Gobb.Clients;
+using Gobb.Options;
 using Gobb.Providers;
 using Gobb.Tools;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Net.Http.Headers;
+using System.Net.Http;
 
 /// <summary>
 /// A program that sets up and runs a host for the Gobb application.
@@ -61,11 +64,25 @@ public sealed class Program
     /// <param name="services">The <see cref="IServiceCollection"/> used for dependency injection</param>
     private static void ConfigureTicketProvider(IConfiguration configuration, IServiceCollection services)
     {
-        services.Configure<JiraClientOptions>(
-            configuration.GetSection("JiraClientOptions"));
+        var ticketProviderType = configuration["TicketProvider:Type"];
 
-        services.AddSingleton<JiraClient>();
-        services.AddSingleton<ITicketProvider, JiraTicketProvider>();
+        if (ticketProviderType == "Jira")
+        {
+            services.Configure<JiraClientOptions>(
+                configuration.GetSection("JiraClientOptions"));
+
+            services.AddSingleton<JiraClient>();
+            services.AddSingleton<ITicketProvider, JiraTicketProvider>();
+        }
+        else if (ticketProviderType == "GitHub")
+        {
+            services.Configure<GitHubClientOptions>(configuration.GetSection("GitHubClientOptions"));
+            services.AddSingleton<ITicketProvider, GitHubClient>();
+        }
+        else
+        {
+            throw new InvalidOperationException("Invalid TicketProvider type specified in configuration.");
+        }
     }
 
     /// <summary>

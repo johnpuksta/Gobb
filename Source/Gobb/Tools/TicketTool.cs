@@ -3,6 +3,7 @@ using ModelContextProtocol.Server;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using Gobb.Tools.Contracts;
+using Gobb.Clients;
 
 namespace Gobb.Tools
 {
