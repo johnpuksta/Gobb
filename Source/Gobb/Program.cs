@@ -76,18 +76,8 @@ public sealed class Program
         }
         else if (ticketProviderType == "GitHub")
         {
-            services.AddHttpClient<GitHubClient>((provider, client) =>
-            {
-                client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("GobbApp", "1.0")); //TODO: Have this reference Gobb's version
-            });
-
-            services.AddSingleton<ITicketProvider>(provider =>
-            {
-                var httpClient = provider.GetRequiredService<HttpClient>();
-                var repositoryOwner = configuration["GitHubClient:RepositoryOwner"];
-                var repositoryName = configuration["GitHubClient:RepositoryName"];
-                return new GitHubClient(httpClient, repositoryOwner, repositoryName);
-            });
+            services.Configure<GitHubClientOptions>(configuration.GetSection("GitHubClientOptions"));
+            services.AddSingleton<ITicketProvider, GitHubClient>();
         }
         else
         {

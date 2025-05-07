@@ -1,21 +1,26 @@
 using Gobb.Clients.Contracts.GitHub;
 using Gobb.Data;
+using Gobb.Options;
 using Gobb.Providers;
+using Microsoft.Extensions.Options;
+using System.Net.Http.Headers;
+using System.Net.Http;
 using System.Text.Json;
 
 namespace Gobb.Clients
 {
     public class GitHubClient : ITicketProvider
     {
-        private readonly HttpClient _httpClient;
         private readonly string _repositoryOwner;
         private readonly string _repositoryName;
+        private readonly HttpClient _httpClient;
 
-        public GitHubClient(HttpClient httpClient, string repositoryOwner, string repositoryName)
+        public GitHubClient(IOptions<GitHubClientOptions> options)
         {
-            _httpClient = httpClient;
-            _repositoryOwner = repositoryOwner;
-            _repositoryName = repositoryName;
+            _repositoryOwner = options.Value.RepositoryOwner;
+            _repositoryName = options.Value.RepositoryName;
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("GobbApp", "1.0"));
         }
 
         public async Task<ITicketData> GetTicketSummaryAndDescriptionAsync(string ticketId)
