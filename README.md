@@ -53,7 +53,8 @@ Gobb is still early in development, so it is limited in features. Gobb currently
   * Methods:
     * `GetTicketDataAsync` - A method to retrieve a Ticket's data and summary and return it to the agent.
   * Supported Ticket Systems:
-    * Currently only Jira is supported.
+    * Jira
+    * GitHub Issues
 
 ### Built With
 * [![Dotnet][Dotnet]][Dotnet-url]
@@ -90,7 +91,7 @@ The following software/tools need to be installed
                   "-e", "JiraClientOptions__Url={INSERT_URL}",
                   "-e", "JiraClientOptions__Email={INSERT_EMAIL}",
                   "-e", "JiraClientOptions__ApiToken={INSERT_APITOKEN}",
-                  "-e", "TicketProvider__Type=Jira",
+                  "-e", "TicketClient__Type=Jira",
                   "jpuksta1/gobb"
               ]
           }        
@@ -101,8 +102,8 @@ The following software/tools need to be installed
     1. The JIRA URL that hosts your Ticket data. Example: `https://domain.atlassian.net`
     2. The email that your JIRA account is registered with.
     3. The API Token you just created.
-    4. (Optional) If using GitHub as the ticket provider:
-       - `TicketProvider__Type`: Set to `GitHub`.
+    4. (Optional) If using GitHub as the ticket client:
+       - `TicketClient__Type`: Set to `GitHub`.
        - `GitHubClient__RepositoryOwner`: The owner of the GitHub repository.
        - `GitHubClient__RepositoryName`: The name of the GitHub repository.
 
@@ -131,34 +132,24 @@ The following software/tools need to be installed
 6. Continue Vibe Coding and Interact with your Agent to tell it to keep/undo changes!
 
 7. __Optional:__ If you want to locally debug Gobb, then you will need to inject the URL, Email, and ApiToken in the `appsettings.json` file. Notes on how to debug can be found under [Debug Notes](Documents/DebugNotes.md).
+ 
+    Gobb supports dynamic selection of ticket providers (Jira or GitHub). To configure this, update the `appsettings.json` file or set environment variables as needed.
 
-### Dynamic Ticket Provider Configuration
-Gobb now supports dynamic selection of ticket providers (Jira or GitHub). To configure this, update the `appsettings.json` file or set environment variables as needed.
-
-#### appsettings.json Example
-```json
-{
-  "TicketProvider": {
-    "Type": "Jira" // Change to "GitHub" to use GitHubClient
-  },
-  "GitHubClient": {
-    "RepositoryOwner": "your-repo-owner",
-    "RepositoryName": "your-repo-name",
-    "Token": "your-github-token"
-  }
-}
-```
-
+    #### appsettings.json Example
+    ```json
+    {
+      "TicketClient": {
+        "Type": "Jira" // Change to "GitHub" to use GitHubClient
+      },
+      "GitHubClient": {
+        "RepositoryOwner": "your-repo-owner",
+        "RepositoryName": "your-repo-name",
+      }
+    }
+    ```
 - **`Type`**: Specifies the ticket provider to use. Set to `Jira` for Jira integration or `GitHub` for GitHub integration.
 - **`GitHubClient`**: Only required if `Type` is set to `GitHub`. Configure the repository owner, name, and token here.
 
-#### Environment Variables Example
-Alternatively, you can set the following environment variables:
-- `TicketProvider__Type`: Set to `Jira` or `GitHub`.
-- `GitHubClient__RepositoryOwner`: The owner of the GitHub repository (only required for GitHub).
-- `GitHubClient__RepositoryName`: The name of the GitHub repository (only required for GitHub).
-
-This flexibility allows you to switch between ticket providers without modifying the code.
 
 #### Other appsettings.json Configuration
 In addition to the dynamic ticket provider configuration, the `appsettings.json` file includes the following settings:
