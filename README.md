@@ -171,7 +171,7 @@ These settings are essential for the application's functionality and should be c
 ## Roadmap
 I plan to fill this out as I come up with more use-cases of MCP for my personal development workflow, or if I get any good suggestions.
 - [ ] Add Ability to Create JIRA tickets
-- [ ] Support GitHub's ticket system
+- [x] Support GitHub's ticket system
 - [ ] Explore/Support integrating git operations
 - [ ] Explore/Support LSP to easily address Errors/Warnings/etc
 
