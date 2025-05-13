@@ -1,5 +1,5 @@
-﻿using Gobb.Options;
-using Gobb.Providers;
+﻿using Gobb.Clients;
+using Gobb.Options;
 using Gobb.Tools;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,11 +61,24 @@ public sealed class Program
     /// <param name="services">The <see cref="IServiceCollection"/> used for dependency injection</param>
     private static void ConfigureTicketProvider(IConfiguration configuration, IServiceCollection services)
     {
-        services.Configure<JiraClientOptions>(
-            configuration.GetSection("JiraClientOptions"));
+        var ticketProviderType = configuration["TicketProvider:Type"];
 
-        services.AddSingleton<JiraClient>();
-        services.AddSingleton<ITicketProvider, JiraTicketProvider>();
+        if (ticketProviderType == "Jira")
+        {
+            services.Configure<JiraClientOptions>(
+                configuration.GetSection("JiraClientOptions"));
+            services.AddSingleton<ITicketClient, JiraClient>();
+        }
+        else if (ticketProviderType == "GitHub")
+        {
+            services.Configure<GitHubClientOptions>(
+                configuration.GetSection("GitHubClientOptions"));
+            services.AddSingleton<ITicketClient, GitHubClient>();
+        }
+        else
+        {
+            throw new InvalidOperationException("Invalid TicketProvider type specified in configuration.");
+        }
     }
 
     /// <summary>

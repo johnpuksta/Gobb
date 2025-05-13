@@ -5,10 +5,10 @@ using Microsoft.Extensions.Options;
 using Moq;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
-namespace Gobb.Integration.Test.Providers
+namespace Gobb.Integration.Test.Clients
 {
     [TestFixture]
-    public class JiraTicketProviderTests
+    public class JiraClientTests
     {
         private IOptions<JiraClientOptions> options;
 
@@ -24,16 +24,13 @@ namespace Gobb.Integration.Test.Providers
         }
 
         [Test]
-        public async Task GetTicketSummaryAndDescriptionAsync_WithValidTicketKey_ReturnsExpected()
+        public async Task GetTicketAsync_WithValidTicketKey_ReturnsExpected()
         {
             var testTicket = "GOBB-1";
-            var jiraClientLogger = new Mock<ILogger<JiraClient>>();
-            var jiraClient = new JiraClient(jiraClientLogger.Object, options);
+            var mockLogger = new Mock<ILogger<JiraClient>>();
+            var jiraClient = new JiraClient(mockLogger.Object, options);
 
-            var jiraTicketProviderLogger = new Mock<ILogger<JiraTicketProvider>>();
-            var jiraTicketProvider = new JiraTicketProvider(jiraTicketProviderLogger.Object, jiraClient);
-            
-            var result = await jiraTicketProvider.GetTicketSummaryAndDescriptionAsync(testTicket);
+            var result = await jiraClient.GetTicketAsync(testTicket);
 
             Assert.Multiple(() =>
             {

@@ -1,4 +1,4 @@
-﻿using Gobb.Clients.Contracts;
+﻿using Gobb.Clients.Contracts.Jira;
 using System.Text;
 
 namespace Gobb.Clients.Helpers
@@ -6,7 +6,7 @@ namespace Gobb.Clients.Helpers
     /// <summary>
     /// A class to parse Jira tickets and convert them into a more readable format.
     /// </summary>
-    public sealed class JiraParser
+    public static class JiraParser
     {
         public static (string summary, string descriptionText) ParseJiraIssue(JiraIssueFields jiraIssueFields)
         {
