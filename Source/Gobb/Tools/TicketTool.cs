@@ -1,5 +1,4 @@
-﻿using Gobb.Providers;
-using ModelContextProtocol.Server;
+﻿using ModelContextProtocol.Server;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using Gobb.Tools.Contracts;
@@ -12,17 +11,17 @@ namespace Gobb.Tools
     /// </summary>
     public sealed class TicketTool
     {
-        private readonly ITicketProvider _ticketProvider;
+        private readonly ITicketClient _ticketClient;
         private readonly ILogger<TicketTool> _logger;
 
         /// <summary>
         /// Constructor for <see cref="TicketTool"/>
         /// </summary>
-        /// <param name="ticketProvider">The <see cref="ITicketProvider"/> used to provide ticket data</param>
+        /// <param name="ticketProvider">The <see cref="ITicketClient"/> used to provide ticket data</param>
         /// <param name="logger">The <see cref="ILogger"/> used for logging</param>
-        public TicketTool(ITicketProvider ticketProvider, ILogger<TicketTool> logger)
+        public TicketTool(ITicketClient ticketProvider, ILogger<TicketTool> logger)
         {
-            _ticketProvider = ticketProvider ?? throw new ArgumentNullException(nameof(ticketProvider));
+            _ticketClient = ticketProvider ?? throw new ArgumentNullException(nameof(ticketProvider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _logger.LogDebug("TicketTool initialized.");
         }
@@ -36,7 +35,7 @@ namespace Gobb.Tools
         public async Task<TicketOutput> GetTicketDataAsync(TicketInput input)
         {
             _logger.LogDebug("Fetching ticket data for TicketId: {TicketId}", input.TicketId);
-            var ticketData = await _ticketProvider.GetTicketSummaryAndDescriptionAsync(input.TicketId);
+            var ticketData = await _ticketClient.GetTicketAsync(input.TicketId);
             _logger.LogDebug("Successfully fetched ticket data for TicketId: {TicketId}", input.TicketId);
             return new TicketOutput(ticketData.Summary, ticketData.Description);
         }

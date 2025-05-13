@@ -1,7 +1,9 @@
 ﻿using Gobb.Clients;
 using Gobb.Options;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Moq;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace Gobb.Integration.Test.Clients
@@ -23,12 +25,13 @@ namespace Gobb.Integration.Test.Clients
         }
 
         [Test]
-        public async Task GetTicketSummaryAndDescriptionAsync_WithValidTicketId_ReturnsExpected()
+        public async Task GetTicketAsync_WithValidTicketId_ReturnsExpected()
         {
             var testTicketId = "2";
-            var gitHubClient = new GitHubClient(options);
+            var mockLogger = new Mock<ILogger<GitHubClient>>();
+            var gitHubClient = new GitHubClient(options, mockLogger.Object);
 
-            var result = await gitHubClient.GetTicketSummaryAndDescriptionAsync(testTicketId);
+            var result = await gitHubClient.GetTicketAsync(testTicketId);
 
             Assert.Multiple(() =>
             {

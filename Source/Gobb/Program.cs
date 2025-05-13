@@ -1,13 +1,10 @@
 ﻿using Gobb.Clients;
 using Gobb.Options;
-using Gobb.Providers;
 using Gobb.Tools;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Net.Http.Headers;
-using System.Net.Http;
 
 /// <summary>
 /// A program that sets up and runs a host for the Gobb application.
@@ -70,14 +67,13 @@ public sealed class Program
         {
             services.Configure<JiraClientOptions>(
                 configuration.GetSection("JiraClientOptions"));
-
-            services.AddSingleton<JiraClient>();
-            services.AddSingleton<ITicketProvider, JiraTicketProvider>();
+            services.AddSingleton<ITicketClient, JiraClient>();
         }
         else if (ticketProviderType == "GitHub")
         {
-            services.Configure<GitHubClientOptions>(configuration.GetSection("GitHubClientOptions"));
-            services.AddSingleton<ITicketProvider, GitHubClient>();
+            services.Configure<GitHubClientOptions>(
+                configuration.GetSection("GitHubClientOptions"));
+            services.AddSingleton<ITicketClient, GitHubClient>();
         }
         else
         {

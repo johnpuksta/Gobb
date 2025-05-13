@@ -5,11 +5,14 @@ using Microsoft.Extensions.Logging;
 using Gobb.Options;
 using Microsoft.Extensions.Options;
 using Gobb.Clients.Contracts.Jira;
+using Gobb.Clients;
+using Gobb.Data;
+using Gobb.Clients.Helpers;
 
 /// <summary>
 /// An http client for interacting with the Jira REST API.
 /// </summary>
-public sealed class JiraClient
+public sealed class JiraClient: ITicketClient
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<JiraClient> _logger;
@@ -32,12 +35,8 @@ public sealed class JiraClient
         _logger.LogDebug("JiraClient initialized with base URL: {BaseUrl}", options.Value.Url);
     }
 
-    /// <summary>
-    /// Asynchronously retrieves a Jira ticket by its Id.
-    /// </summary>
-    /// <param name="ticketId">The ticket's Id</param>
-    /// <returns>A <see cref="Task"/> containing <see cref="JiraIssue"/> data on success</returns>
-    public async Task<JiraIssue> GetIssueAsync(string ticketId)
+    /// <inheritdoc/>
+    public async Task<ITicketData> GetTicketAsync(string ticketId)
     {
         _logger.LogDebug("Fetching issue with key: {IssueKey}", ticketId);
         HttpResponseMessage response = await _httpClient.GetAsync($"/rest/api/3/issue/{ticketId}");
@@ -46,7 +45,9 @@ public sealed class JiraClient
             string json = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             _logger.LogInformation("Successfully fetched issue: {IssueKey}", ticketId);
-            return JsonSerializer.Deserialize<JiraIssue>(json, options);
+            var jiraIssue = JsonSerializer.Deserialize<JiraIssue>(json, options);
+            var (summary, description) = JiraParser.ParseJiraIssue(jiraIssue.Fields);
+            return new TicketData(summary, description);
         }
         else
         {
