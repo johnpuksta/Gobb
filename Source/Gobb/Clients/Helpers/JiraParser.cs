@@ -9,7 +9,7 @@ namespace Gobb.Clients.Helpers
     /// </summary>
     public static class JiraParser
     {
-        public static ITicketData ParseJiraIssue(JiraIssueFields jiraIssueFields)
+        public static ITicketContext ParseJiraIssue(JiraIssueFields jiraIssueFields)
         {
             var sb = new StringBuilder();
 
@@ -21,7 +21,7 @@ namespace Gobb.Clients.Helpers
                 }
             }
 
-            return new TicketData(jiraIssueFields.Summary, sb.ToString().Trim(), ParseJiraComments(jiraIssueFields));
+            return new TicketContext(jiraIssueFields.Summary, sb.ToString().Trim(), ParseJiraComments(jiraIssueFields));
         }
 
         private static List<string> ParseJiraComments(JiraIssueFields jiraIssueFields)

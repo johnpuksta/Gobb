@@ -36,7 +36,7 @@ public sealed class JiraClient: ITicketClient
     }
 
     /// <inheritdoc/>
-    public async Task<ITicketData> GetTicketAsync(string ticketId)
+    public async Task<ITicketContext> GetTicketAsync(string ticketId)
     {
         _logger.LogDebug("Fetching issue with key: {IssueKey}", ticketId);
         HttpResponseMessage response = await _httpClient.GetAsync($"/rest/api/3/issue/{ticketId}");

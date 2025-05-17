@@ -38,7 +38,7 @@ namespace Gobb.Clients
         }
 
         /// <inheritdoc/>
-        public async Task<ITicketData> GetTicketAsync(string ticketId)
+        public async Task<ITicketContext> GetTicketAsync(string ticketId)
         {
             _logger.LogInformation("Fetching ticket with ID: {TicketId}", ticketId);
 
@@ -68,7 +68,7 @@ namespace Gobb.Clients
 
             var comments = await GetIssueCommentsAsync(ticketId);
 
-            return new TicketData(issue.Title, issue.Body, comments.Select(g => g.Body).ToList());
+            return new TicketContext(issue.Title, issue.Body, comments.Select(g => g.Body).ToList());
         }
 
         private async Task<IReadOnlyList<GitHubComment>> GetIssueCommentsAsync(string ticketId)

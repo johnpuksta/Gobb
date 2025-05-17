@@ -11,7 +11,7 @@ namespace Gobb.Clients
         /// Asynchronously retrieves a ticket by its Id.
         /// </summary>
         /// <param name="ticketId">The ticket's Id</param>
-        /// <returns>A <see cref="Task"/> containing <see cref="ITicketData"/> data on success</returns>
-        public Task<ITicketData> GetTicketAsync(string ticketId);
+        /// <returns>A <see cref="Task"/> containing <see cref="ITicketContext"/> data on success</returns>
+        public Task<ITicketContext> GetTicketAsync(string ticketId);
     }
 }

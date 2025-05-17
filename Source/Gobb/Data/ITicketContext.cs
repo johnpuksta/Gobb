@@ -1,9 +1,9 @@
 ﻿namespace Gobb.Data
 {
     /// <summary>
-    /// A template for ticket data.
+    /// A template for ticket context.
     /// </summary>
-    public interface ITicketData
+    public interface ITicketContext
     {
         /// <summary>
         /// The ticket's summary.

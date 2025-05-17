@@ -1,17 +1,17 @@
 ﻿namespace Gobb.Data
 {
     /// <summary>
-    /// A basic implementation of <see cref="ITicketData"/> to store ticket data."/>
+    /// A basic implementation of <see cref="ITicketContext"/> to store ticket context."/>
     /// </summary>
-    public class TicketData: ITicketData
+    public class TicketContext: ITicketContext
     {
         /// <summary>
-        /// Constructor for <see cref="TicketData"/>
+        /// Constructor for <see cref="TicketContext"/>
         /// </summary>
         /// <param name="summary">The ticket's summary</param>
         /// <param name="description">The ticket's description</param>
         /// <param name="comments">The ticket's comments</param>
-        public TicketData(string summary, string description, IList<string> comments)
+        public TicketContext(string summary, string description, IList<string> comments)
         {
             Summary = summary;
             Description = description;
