@@ -36,7 +36,7 @@ public sealed class JiraClient: ITicketClient
     }
 
     /// <inheritdoc/>
-    public async Task<ITicketData> GetTicketAsync(string ticketId)
+    public async Task<ITicketContext> GetTicketAsync(string ticketId)
     {
         _logger.LogDebug("Fetching issue with key: {IssueKey}", ticketId);
         HttpResponseMessage response = await _httpClient.GetAsync($"/rest/api/3/issue/{ticketId}");
@@ -46,8 +46,7 @@ public sealed class JiraClient: ITicketClient
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             _logger.LogInformation("Successfully fetched issue: {IssueKey}", ticketId);
             var jiraIssue = JsonSerializer.Deserialize<JiraIssue>(json, options);
-            var (summary, description) = JiraParser.ParseJiraIssue(jiraIssue.Fields);
-            return new TicketData(summary, description);
+            return JiraParser.ParseJiraIssue(jiraIssue.Fields);
         }
         else
         {

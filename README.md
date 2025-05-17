@@ -51,7 +51,7 @@ As I have experimented with VS Code's Agent Mode and Cursor, I have been impress
 Gobb is still early in development, so it is limited in features. Gobb currently includes:
 * `TicketTool` - A service to retrieve Tickets/Issues and inject them into an agent's context window.
   * Methods:
-    * `GetTicketDataAsync` - A method to retrieve a Ticket's data and summary and return it to the agent.
+    * `GetTicketContextAsync` - A method to retrieve a Ticket's context and return it to the agent.
   * Supported Ticket Systems:
     * Jira
     * GitHub Issues

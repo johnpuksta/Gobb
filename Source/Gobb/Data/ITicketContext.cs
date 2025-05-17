@@ -1,9 +1,9 @@
 ﻿namespace Gobb.Data
 {
     /// <summary>
-    /// A template for ticket data.
+    /// A template for ticket context.
     /// </summary>
-    public interface ITicketData
+    public interface ITicketContext
     {
         /// <summary>
         /// The ticket's summary.
@@ -14,5 +14,10 @@
         /// The ticket's description.
         /// </summary>
         public string Description { get; init; }
+
+        /// <summary>
+        /// The ticket's comments.
+        /// </summary>
+        public IList<string> Comments { get; init; }
     }
 }

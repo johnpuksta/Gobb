@@ -61,7 +61,7 @@ public sealed class Program
     /// <param name="services">The <see cref="IServiceCollection"/> used for dependency injection</param>
     private static void ConfigureTicketProvider(IConfiguration configuration, IServiceCollection services)
     {
-        var ticketProviderType = configuration["TicketProvider:Type"];
+        var ticketProviderType = configuration["TicketClient:Type"];
 
         if (ticketProviderType == "Jira")
         {
@@ -77,7 +77,7 @@ public sealed class Program
         }
         else
         {
-            throw new InvalidOperationException("Invalid TicketProvider type specified in configuration.");
+            throw new InvalidOperationException("Invalid TicketClient type specified in configuration.");
         }
     }
 

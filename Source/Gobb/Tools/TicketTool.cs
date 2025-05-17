@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using Gobb.Tools.Contracts;
 using Gobb.Clients;
+using Gobb.Data;
 
 namespace Gobb.Tools
 {
@@ -27,17 +28,17 @@ namespace Gobb.Tools
         }
 
         /// <summary>
-        /// Retrieves a ticket's summary and description asynchronously.
+        /// Retrieves a ticket's context asynchronously.
         /// </summary>
         /// <param name="input">The <see cref="TicketInput"/> record containing a ticket's ID.</param>
-        /// <returns></returns>
-        [McpServerTool, Description("Retrieves a ticket's summary and description asynchronously")]
-        public async Task<TicketOutput> GetTicketDataAsync(TicketInput input)
+        /// <returns>An <see cref="ITicketContext"/>.</returns>
+        [McpServerTool, Description("Retrieves a ticket's context asynchronously")]
+        public async Task<ITicketContext> GetTicketContextAsync(TicketInput input)
         {
-            _logger.LogDebug("Fetching ticket data for TicketId: {TicketId}", input.TicketId);
+            _logger.LogDebug("Fetching ticket context for TicketId: {TicketId}", input.TicketId);
             var ticketData = await _ticketClient.GetTicketAsync(input.TicketId);
             _logger.LogDebug("Successfully fetched ticket data for TicketId: {TicketId}", input.TicketId);
-            return new TicketOutput(ticketData.Summary, ticketData.Description);
+            return ticketData;
         }
     }
 }

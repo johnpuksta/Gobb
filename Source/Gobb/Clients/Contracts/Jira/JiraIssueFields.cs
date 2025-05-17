@@ -9,5 +9,8 @@ namespace Gobb.Clients.Contracts.Jira
 
         [JsonPropertyName("description")]
         public DescriptionBlock Description { get; set; }
+
+        [JsonPropertyName("comment")]
+        public JiraCommentBlock? Comment { get; set; }
     }
 }

@@ -38,6 +38,7 @@ namespace Gobb.Integration.Test.Clients
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.Summary, Is.Not.Null);
                 Assert.That(result.Description, Is.Not.Null);
+                Assert.That(result.Comments, Is.Not.Null);
             });
         }
     }
