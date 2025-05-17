@@ -46,8 +46,7 @@ public sealed class JiraClient: ITicketClient
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             _logger.LogInformation("Successfully fetched issue: {IssueKey}", ticketId);
             var jiraIssue = JsonSerializer.Deserialize<JiraIssue>(json, options);
-            var (summary, description) = JiraParser.ParseJiraIssue(jiraIssue.Fields);
-            return new TicketData(summary, description);
+            return JiraParser.ParseJiraIssue(jiraIssue.Fields);
         }
         else
         {

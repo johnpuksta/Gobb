@@ -10,10 +10,12 @@
         /// </summary>
         /// <param name="summary">The ticket's summary</param>
         /// <param name="description">The ticket's description</param>
-        public TicketData(string summary, string description)
+        /// <param name="comments">The ticket's comments</param>
+        public TicketData(string summary, string description, IList<string> comments)
         {
             Summary = summary;
             Description = description;
+            Comments = comments;
         }
 
         /// <inheritdoc/>
@@ -21,5 +23,8 @@
 
         /// <inheritdoc/>
         public string Description { get; init; }
+
+        /// <inheritdoc/>
+        public IList<string> Comments { get; init; }
     }
 }

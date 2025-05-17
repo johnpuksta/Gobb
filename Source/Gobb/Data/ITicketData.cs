@@ -14,5 +14,10 @@
         /// The ticket's description.
         /// </summary>
         public string Description { get; init; }
+
+        /// <summary>
+        /// The ticket's comments.
+        /// </summary>
+        public IList<string> Comments { get; init; }
     }
 }

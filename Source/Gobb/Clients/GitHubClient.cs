@@ -66,7 +66,40 @@ namespace Gobb.Clients
 
             _logger.LogInformation("Successfully fetched ticket with title: {Title}", issue.Title);
 
-            return new TicketData(issue.Title, issue.Body);
+            var comments = await GetIssueCommentsAsync(ticketId);
+
+            return new TicketData(issue.Title, issue.Body, comments.Select(g => g.Body).ToList());
+        }
+
+        private async Task<IReadOnlyList<GitHubComment>> GetIssueCommentsAsync(string ticketId)
+        {
+            _logger.LogInformation("Fetching comments for ticket ID: {TicketId}", ticketId);
+
+            var url = $"https://api.github.com/repos/{_repositoryOwner}/{_repositoryName}/issues/{ticketId}/comments";
+            _logger.LogDebug("Constructed comments URL: {Url}", url);
+
+            var response = await _httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Failed to fetch comments. Status code: {StatusCode}", response.StatusCode);
+                response.EnsureSuccessStatusCode();
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+            _logger.LogDebug("Comments response content: {Content}", content);
+
+            var comments = JsonSerializer.Deserialize<List<GitHubComment>>(content);
+
+            if (comments == null)
+            {
+                _logger.LogError("Failed to deserialize GitHub comments.");
+                throw new InvalidOperationException("Failed to deserialize GitHub comments.");
+            }
+
+            _logger.LogInformation("Successfully fetched {Count} comments.", comments.Count);
+
+            return comments;
         }
     }
 }

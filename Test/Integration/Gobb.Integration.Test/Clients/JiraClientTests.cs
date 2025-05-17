@@ -26,7 +26,7 @@ namespace Gobb.Integration.Test.Clients
         [Test]
         public async Task GetTicketAsync_WithValidTicketKey_ReturnsExpected()
         {
-            var testTicket = "GOBB-1";
+            var testTicket = "GOBB-3";
             var mockLogger = new Mock<ILogger<JiraClient>>();
             var jiraClient = new JiraClient(mockLogger.Object, options);
 
@@ -37,6 +37,7 @@ namespace Gobb.Integration.Test.Clients
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result.Summary, Is.Not.Null);
                 Assert.That(result.Description, Is.Not.Null);
+                Assert.That(result.Comments, Is.Not.Null);
             });
         }
     }

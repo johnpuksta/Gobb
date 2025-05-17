@@ -1,4 +1,5 @@
 ﻿using Gobb.Clients.Contracts.Jira;
+using Gobb.Data;
 using System.Text;
 
 namespace Gobb.Clients.Helpers
@@ -8,7 +9,7 @@ namespace Gobb.Clients.Helpers
     /// </summary>
     public static class JiraParser
     {
-        public static (string summary, string descriptionText) ParseJiraIssue(JiraIssueFields jiraIssueFields)
+        public static ITicketData ParseJiraIssue(JiraIssueFields jiraIssueFields)
         {
             var sb = new StringBuilder();
 
@@ -20,7 +21,29 @@ namespace Gobb.Clients.Helpers
                 }
             }
 
-            return (jiraIssueFields.Summary, sb.ToString().Trim());
+            return new TicketData(jiraIssueFields.Summary, sb.ToString().Trim(), ParseJiraComments(jiraIssueFields));
+        }
+
+        private static List<string> ParseJiraComments(JiraIssueFields jiraIssueFields)
+        {
+            var comments = new List<string>();
+            var commentBlock = jiraIssueFields.Comment;
+            if (commentBlock?.Comments != null)
+            {
+                foreach (var comment in commentBlock.Comments)
+                {
+                    if (comment.Body?.Content != null)
+                    {
+                        var sb = new StringBuilder();
+                        foreach (var block in comment.Body.Content)
+                        {
+                            ParseContentBlock(block, sb);
+                        }
+                        comments.Add(sb.ToString().Trim());
+                    }
+                }
+            }
+            return comments;
         }
 
         private static void ParseContentBlock(ContentBlock block, StringBuilder sb, int indentLevel = 0)
@@ -60,6 +83,4 @@ namespace Gobb.Clients.Helpers
             }
         }
     }
-
-
 }
